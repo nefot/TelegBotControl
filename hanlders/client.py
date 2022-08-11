@@ -6,7 +6,7 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import Message, InputFile
 import Dispether
 from cmds import get_answer, Setup
-from keybroad import keybroad
+from keybroadTel import keybroad
 from loader import bot, dp
 from screnslover import Make_Photo
 
