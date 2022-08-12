@@ -30,6 +30,5 @@ def KillTaskInt(pids):
     for proc in psutil.process_iter(['pid', 'name', 'username']):
 
         if proc.pid == pids:
-            print(proc)
             proc.kill()
 #

