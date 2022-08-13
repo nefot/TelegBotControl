@@ -3,23 +3,27 @@ import subprocess
 
 
 def GetAnswer(simple_command):
-
-    if simple_command == "dir":
-        return DirOut(os.popen(simple_command).read().encode('cp1251').decode('cp866'))
-    elif simple_command.split(" ")[0] == "cd":
-        return ChDir(simple_command)
+    if simple_command.split(" ")[0] == "/c":
+        return CheckCommand(simple_command[3:])
     else:
-        return os.popen(simple_command).read().encode('cp1251').decode('cp866')
+        return CheckCommand(simple_command)
 
 
+def CheckCommand(commands):
+    if commands.split(" ")[0] == "dir":
+        return DirOut(os.popen(commands).read().encode('cp1251').decode('cp866'))
+    elif commands.split(" ")[0] == "cd":
+        return ChDir(commands)
+    else:
+        return os.popen(commands).read().encode('cp1251').decode('cp866')
 
 
 def Setup(app):
+    print(app)
     dir = os.getcwd()
     result = subprocess.Popen(dir + "/" + app, shell=True, encoding='utf-8')
 
     return f"файл {result.args} открыт"
-
 
 
 def DirOut(command):
@@ -45,7 +49,7 @@ def DirOut(command):
                             lst_data_sorted[index]['name'] + "\n")
     return " ".join(lst_data_out)
 
-def ChDir(command):
 
+def ChDir(command):
     os.chdir(command.split(" ")[1])
     return DirOut(os.popen("dir").read().encode('cp1251').decode('cp866'))

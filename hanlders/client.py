@@ -45,38 +45,32 @@ async def get_username(message: Message, state: FSMContext):
     await SomeStates.next()
 
 
-@dp.message_handler(commands=['c'])
+@dp.message_handler(commands=['c'])  # Запуск команд в командной строке
 async def Command_start(message: Message):
     await message.answer("Командная строка:", reply_markup=keybroad.keyboard_client)
 
-    a = (message.text.split(' '))
-    del a[0]
-
-    if len(GetAnswer(' '.join(a))) > 4096:
-        for x in range(0, len(GetAnswer(' '.join(a))), 4096):
-            await bot.send_message(message.chat.id, GetAnswer(' '.join(a))[x:x + 4096])
+    if len(GetAnswer(message.text)) > 4096:
+        for x in range(0, len(GetAnswer(message.text)), 4096):
+            await bot.send_message(message.chat.id, GetAnswer(message.text)[x:x + 4096])
     else:
         try:
-            await bot.send_message(message.chat.id, GetAnswer(' '.join(a)))
+            await bot.send_message(message.chat.id, GetAnswer(message.text))
         except aiogram.utils.exceptions.MessageTextIsEmpty:
             await bot.send_message(message.chat.id, "MessageTextIsEmpty")
             print("MessageTextIsEmpty")
 
 
-@dp.message_handler(commands=['s'])
+@dp.message_handler(commands=['s'])  # Запуск приложения
 async def Command_start(message: Message):
     await message.answer("запускается...", reply_markup=keybroad.keyboard_client)
 
-    a = (message.text.split(' '))
-    del a[0]
-    try:
-        if len(Setup(' '.join(a))) > 4096:
-            for x in range(0, len(Setup(' '.join(a))), 4096):
-                await bot.send_message(message.chat.id, Setup(' '.join(a))[x:x + 4096])
-        else:
-            await bot.send_message(message.chat.id, Setup(' '.join(a)))
-    except Exception:
-        await bot.send_message(Exception)
+    if len(Setup(''.join(message.text.split(" ")[1]))) > 4096:
+        for x in range(0, len(Setup(''.join(message.text.split(" ")[1]))), 4096):
+            await bot.send_message(message.chat.id, Setup(''.join(message.text.split(" ")[1]))[x:x + 4096])
+    else:
+        await bot.send_message(message.chat.id, Setup(''.join(message.text.split(" ")[1])))
+
+
 
 
 @dp.message_handler(commands=['exists'])
@@ -121,8 +115,14 @@ async def command_devices(message: Message):
     await bot.send_message(message.from_user.id, text='keyboard.menu', reply_markup=keybroad.keyboard_client)
 
 
+allowed_names = ["dir", "cd", "tree"]
+
+
 @dp.message_handler()
 async def command_devices(message: Message):
+    if message.text.split(" ")[0] in allowed_names:
+        await bot.send_message(message.from_user.id, GetAnswer(message.text), reply_markup=None)
+
     if message.text == "кирилл" or message.text == "/кирилл":
         os.chdir("C:\\Users\kiril\OneDrive\Рабочий стол ")
 
