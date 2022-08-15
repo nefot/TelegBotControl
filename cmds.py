@@ -19,8 +19,8 @@ def CheckCommand(commands):
     else:
         try:
             return os.popen(commands).read().encode('cp1251').decode('cp866')
-        except:
-            return "нет такой команды"
+        except Exception as error:
+            return error
 
 
 # запуск приложения в новом потоке
@@ -40,8 +40,7 @@ def DirOut(command):
     try:
         fields = ('data', 'time', 'type', 'name')
         lst_data = list(filter(None, command.split("\n")))
-        cur_dir = (" ".join(lst_data[2].split(" "))[3:])  + '\n'
-
+        cur_dir = (" ".join(lst_data[2].split(" "))[3:]) + '\n'
 
         folders = list(filter(None, (lst_data[-1].split(" "))))[-5]
         files = list(filter(None, (lst_data[-2].split(" "))))[-4]
@@ -69,9 +68,14 @@ def DirOut(command):
         return " ".join(lst_data_out)
     except Exception as error:
         return error
+
+
 # метод добавляет файл в архив
 def SendFile(command):
-    pass
+    try:
+        pass
+    except Exception as error:
+        return error
 
 
 # метод изменяет директорию
@@ -85,6 +89,3 @@ def ChDir(command):
         return "Файл не найден проверьте синтаксис"
     except Exception as error:
         return (error)
-
-
-

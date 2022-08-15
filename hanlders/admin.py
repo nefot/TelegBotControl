@@ -2,7 +2,6 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from keybroadTel.keybroad import admin_keyboard
 
 from loader import dp, bot
 from aiogram.types import Message
