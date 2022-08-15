@@ -1,6 +1,5 @@
 import os
 import socket
-
 import aiogram.utils.exceptions
 import pyautogui
 import win32api
@@ -57,7 +56,7 @@ async def Command_start(message: Message):
             await bot.send_message(message.chat.id, GetAnswer(message.text))
         except aiogram.utils.exceptions.MessageTextIsEmpty:
             await bot.send_message(message.chat.id, "MessageTextIsEmpty")
-            print("MessageTextIsEmpty")
+            # print("MessageTextIsEmpty")
 
 
 @dp.message_handler(commands=['s'])  # Запуск приложения
@@ -69,8 +68,6 @@ async def Command_start(message: Message):
             await bot.send_message(message.chat.id, Setup(''.join(message.text.split(" ")[1]))[x:x + 4096])
     else:
         await bot.send_message(message.chat.id, Setup(''.join(message.text.split(" ")[1])))
-
-
 
 
 @dp.message_handler(commands=['exists'])
@@ -149,7 +146,14 @@ async def command_devices(message: Message):
             Dispether.KillTaskInt(int(message.text.split(" ")[1]))
 
     if message.text.split(" ")[0] == "отправить":
-        bot.send_document(message.chat.id, open(message.text.split(" ")[1]))
+        try:
+            print(" ".join(message.text.split(" ")[1:]))
+            await bot.send_message(message.chat.id, 'Загрузка файла')
+            file = open(" ".join(message.text.split(" ")[1:]), 'rb')
+            await bot.send_document(message.chat.id, file)
+
+        except PermissionError as err:
+            await bot.send_message(message.chat.id, err)
 
     if message.text == "функции":
         pass
